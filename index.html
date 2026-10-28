@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Escravos Dourados</title>
+<meta name="description" content="Tesouraria de Patrick: o patrimônio contado em escravos dourados, à moda de Arkad.">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0A1330">
+<link rel="icon" href="/icone.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icone-180.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+</head>
+<body>
+<div class="portao" id="portao" hidden>
+  <form class="portao-card" id="portaoForm">
+    <div class="eyebrow">Tesouraria de Patrick</div>
+    <h1>Escravos Dourados</h1>
+    <p class="muted">Este tesouro só abre com a chave de Arkad. Abra pelo seu link de acesso uma vez e este navegador lembra.</p>
+    <label for="portaoChave" class="eyebrow">Chave ou link de acesso</label>
+    <input id="portaoChave" type="password" autocomplete="current-password" required>
+    <button class="btn" type="submit">Abrir o tesouro</button>
+    <p class="status" id="portaoMsg" role="status"></p>
+  </form>
+</div>
+<div class="wrap">
+  <nav class="tabs" role="tablist" aria-label="Seções">
+    <button type="button" role="tab" id="tTes" aria-selected="true" aria-controls="pTesouraria">Tesouraria</button>
+    <button type="button" role="tab" id="tOrd" aria-selected="false" aria-controls="pOrdens">Ordens de compra</button>
+  </nav>
+  <div class="pane" id="pTesouraria" role="tabpanel">
+  <header class="hero">
+    <div>
+      <h1><span>Tesouraria de Patrick</span>Escravos Dourados</h1>
+      <p class="quote">“Cada moeda de ouro que guardas é um escravo que trabalha para ti. Cada cobre que ela ganha é seu filho, que também pode trabalhar.” — Arkad, o homem mais rico da Babilônia</p>
+    </div>
+    <div class="count" id="contagem">
+      <div class="eyebrow" id="censoData">Aguardando o censo…</div>
+      <div class="big" id="nEscravos">—</div>
+      <div class="lbl">escravos dourados em serviço <span class="muted">(1 escravo = R$ 1.000)</span></div>
+      <div class="delta" id="deltaCenso"></div>
+      <div class="chips" id="chips"></div>
+    </div>
+  </header>
+
+  <section aria-label="Canteiro de obras">
+    <div class="frieze" aria-hidden="true"></div>
+    <div class="stage"><canvas id="cena" role="img" aria-label="Escravos dourados construindo um zigurate"></canvas></div>
+    <div class="legend" id="legendaCena"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">I · As legiões</div>
+      <h2>Quem está trabalhando e quem fugiu</h2>
+      <p class="muted">Cada ponto vale 10 escravos. Dourado está em serviço. Vazado foi recrutado pelo preço médio e não voltou.</p>
+    </div>
+    <div class="legions" id="legioes"><div class="empty">As legiões aparecem depois do primeiro censo.</div></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">II · O salário do exército</div>
+      <h2>Quanto o ouro produz sozinho</h2>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">III · A crônica</div>
+      <h2>Rendimento acumulado desde a primeira tábua</h2>
+      <p class="muted" id="cronicaNota">Do relatório de rentabilidade acumulada.</p>
+    </div>
+    <div class="toggle" role="group" aria-label="Modo da crônica">
+      <button type="button" id="mReais" aria-pressed="true">R$ acumulado</button>
+      <button type="button" id="mPct" aria-pressed="false">% vs CDI</button>
+    </div>
+    <div class="chart" id="cronica"><div class="empty">A crônica aparece quando o relatório de rentabilidade acumulada for enviado.</div></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">IV · A colheita</div>
+      <h2>O que cada mês trouxe ou levou</h2>
+      <p class="muted">Variação do rendimento acumulado, mês a mês.</p>
+    </div>
+    <div class="chart" id="colheita"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">V · Os censos</div>
+      <h2>O tamanho do exército a cada contagem</h2>
+      <p class="muted">Cada envio dos relatórios vira um censo. É aqui que o crescimento aparece.</p>
+    </div>
+    <div class="two">
+      <div class="chart" id="censoChart"></div>
+      <div class="tbl-wrap"><table id="censoTbl"><thead><tr><th>Censo</th><th>Escravos</th><th>Δ</th><th>Patrimônio</th><th></th></tr></thead><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">VI · As leis do ouro</div>
+      <h2>O tribunal de Arkad</h2>
+    </div>
+    <div class="laws" id="leis"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div class="eyebrow">VII · A profecia</div>
+      <h2>Para onde o exército marcha</h2>
+      <p class="muted">Premissas explícitas, sem aportes novos. Renda fixa a 100% do CDI recente, bruto de IR.</p>
+    </div>
+    <div class="kpis" id="profecia"></div>
+  </section>
+
+  <section id="novo">
+    <div class="sec-head">
+      <div class="eyebrow">VIII · Novo censo</div>
+      <h2>Contar o exército de novo</h2>
+      <p class="muted">Exporte os três relatórios do banco (Rentabilidade acumulada, Seus ativos, Meus produtos) e solte aqui. Censo no mesmo dia substitui o anterior.</p>
+    </div>
+    <label class="drop" id="drop" for="arq">
+      <input type="file" id="arq" accept=".xlsx,.xls" multiple>
+      <strong>Soltar os relatórios .xlsx aqui</strong>
+      <span class="muted">ou toque para escolher</span>
+      <ul class="checklist" id="check">
+        <li data-k="ativos">Seus ativos (quantidade, preço, preço médio)</li>
+        <li data-k="produtos">Meus produtos (saldo e rendimento por produto)</li>
+        <li data-k="serie">Rentabilidade acumulada (a crônica diária)</li>
+      </ul>
+    </label>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="btn" id="salvar" type="button" disabled>Registrar censo</button>
+      <button class="btn ghost" id="limpar" type="button">Limpar</button>
+      <span class="status" id="status"></span>
+    </div>
+  </section>
+  </div>
+
+  <div class="pane" id="pOrdens" role="tabpanel" hidden>
+    <header class="sec-head">
+      <div class="eyebrow">Mercado de escravos</div>
+      <h1 style="font-size:clamp(32px,5vw,52px);color:var(--gold)">Livro de ordens</h1>
+      <p class="muted">Cada compra é um recrutamento. Esta aba mostra quanto ouro cada ordem levou, quantos escravos dela ainda trabalham hoje e o que está esperando no livro.</p>
+    </header>
+    <div class="kpis" id="oKpis"></div>
+
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">I · Recrutamentos</div>
+        <h2>Cada ordem e o que restou dela</h2>
+        <p class="muted">Contorno tracejado: escravos comprados pelo preço pago. Barra cheia: quanto aquela ordem vale hoje.</p>
+      </div>
+      <div class="chart" id="oRecr"></div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">II · Curva do preço médio</div>
+        <h2>Como cada ordem moveu o preço médio</h2>
+        <p class="muted">Degraus sólidos são ordens executadas. Tracejados mostram o que acontece se as pendentes executarem.</p>
+      </div>
+      <div class="toggle" role="group" aria-label="Ativo" id="oAtivos"></div>
+      <div class="chart" id="oPM"></div>
+      <p class="caption mono" id="oPMcap"></p>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">III · Ordens no livro</div>
+        <h2>As emboscadas armadas</h2>
+        <p class="muted">A barra inteira é o preço de hoje. O dourado vai até o preço limite: quanto menor, mais longe a ordem está de executar.</p>
+      </div>
+      <div class="rungs" id="oLadder"></div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">IV · O livro</div>
+        <h2>Todas as ordens</h2>
+      </div>
+      <div class="tbl-wrap"><table id="oTbl"><thead><tr><th>Data</th><th>Ativo</th><th>Tipo</th><th>Qtd</th><th>Preço</th><th>Total</th><th>Escravos pagos → hoje</th><th>Status</th><th>Origem</th><th></th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section>
+      <div class="sec-head">
+        <div class="eyebrow">V · Conferência</div>
+        <h2>O livro bate com a custódia?</h2>
+        <p class="muted">Compara o que o livro soma com a posição do último censo. Diferença quer dizer que falta ordem no livro.</p>
+      </div>
+      <div class="tbl-wrap"><table id="oConf"><thead><tr><th>Ativo</th><th>Qtd livro</th><th>Qtd custódia</th><th>PM livro</th><th>PM banco</th><th>Situação</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="oNovo">
+      <div class="sec-head">
+        <div class="eyebrow">VI · Registrar</div>
+        <h2>Lançar ou importar ordens</h2>
+        <p class="muted">Importe o extrato de ordens ou de negociações do banco (.xlsx ou .csv). As colunas são reconhecidas pelo nome: data, ativo, compra/venda, quantidade, preço, status. Ordens repetidas não duplicam.</p>
+      </div>
+      <label class="drop" id="oDrop" for="oArq">
+        <input type="file" id="oArq" accept=".xlsx,.xls,.csv" multiple>
+        <strong>Soltar o extrato de ordens aqui</strong>
+        <span class="muted">ou toque para escolher</span>
+      </label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn" id="oImportar" type="button" disabled>Importar ordens</button>
+        <span class="status" id="oImpStatus"></span>
+      </div>
+      <form class="oform" id="oForm">
+        <label for="oData">Data<input type="date" id="oData"></label>
+        <label for="oAtivoIn">Ativo<input id="oAtivoIn" list="oLista" placeholder="RAIZ4" autocomplete="off" required></label>
+        <datalist id="oLista"></datalist>
+        <label for="oTipo">Tipo<select id="oTipo"><option value="C">Compra</option><option value="V">Venda</option><option value="A">Aplicação (renda fixa)</option></select></label>
+        <label for="oQtd">Quantidade<input id="oQtd" inputmode="decimal" placeholder="100.000" required></label>
+        <label for="oPreco">Preço (R$)<input id="oPreco" inputmode="decimal" placeholder="0,20" required></label>
+        <label for="oStatusIn">Status<select id="oStatusIn"><option value="executada">Executada</option><option value="pendente">Pendente</option><option value="cancelada">Cancelada</option></select></label>
+        <label for="oNota">Nota<input id="oNota" placeholder="opcional"></label>
+        <button class="btn" type="submit">Lançar ordem</button>
+      </form>
+      <span class="status" id="oFormStatus"></span>
+      <p class="caption">Aplicação em renda fixa: quantidade 1 e preço igual ao valor aplicado.</p>
+    </section>
+  </div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
